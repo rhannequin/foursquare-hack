@@ -5,9 +5,9 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     el: 'body',
     $categories: $('.categories'),
+    $actions: $('.actions'),
     foursquareApiUrl: 'https://api.foursquare.com/v2/',
-    foursquareOauthToken: 'L3DMOWACH200L0QKG1GK5DVGS1EEFMO5K4ND5WCI3JQ1RZ3I',
-    foursquareFoodCategoryId: '4d4b7105d754a06374d81259',
+    foursquareOauthToken: 'CKTMK32OZVMXUXXHSHBUJXGLIV2AYFUN00SG5ICMET3B5TQN',
     foursquareCategories: $('#require-js').data('params').foursquareCategories,
     /*foursquareCategories: [
       {name: "Boulangerie",                      id: "4bf58dd8d48988d16a941735"},
@@ -35,7 +35,9 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     map: null,
 
     events: {
-      'click .find-venues': 'fireVenuesSearch'
+      'click .find-venues': 'fireVenuesSearch',
+      'click .check-all':   'checkAllCategories',
+      'click .uncheck-all': 'uncheckAllCategories'
     },
 
     initialize: function () {
@@ -106,21 +108,24 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     fireVenuesSearch: function (e) {
       var choices = []
           self = this;
-      $( $(e.currentTarget).parent().find('input:checked') ).each(function (k, v) {
-        choices.push($(v).attr('name'));
-      });
-      choices = choices.join(',');
+      if(this.$categories.find('input:checked').length) {
+        $( $(e.currentTarget).parent().find('input:checked') ).each(function (k, v) {
+          choices.push($(v).attr('name'));
+        });
+        choices = choices.join(',');
 
-      var venuesRequest = this.foursquareRequest('venues/search', {
-        ll: this.userLatitude + ',' + this.userLongitude,
-        intent: 'browse',
-        limit: 50,
-        radius: 5000, // 5000 meters around user's location
-        categoryId: choices
-      }).done(function (results) {
-        var items = results.response.groups[0].items;
-        self.showNearVenues(self.map, items);
-      });
+        var venuesRequest = this.foursquareRequest('venues/search', {
+          ll: this.userLatitude + ',' + this.userLongitude,
+          limit: 50,
+          radius: 5000, // 5000 meters around user's location
+          categoryId: choices
+        }).done(function (results) {
+          var items = results.response.groups[0].items;
+          self.showNearVenues(self.map, items);
+        });
+      } else {
+        alert('You must choose at least one category.');
+      }
     },
 
     // Display venue markers to a map
@@ -139,9 +144,30 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       var inputs = '';
       for(var i in categories) {
         var category = categories[i];
-        inputs += '<div class="row-fluid"><label><input type="checkbox" name="' + category.id + '" checked /> ' + category.name + '</label></div>';
+        inputs += '<label><input type="checkbox" name="' + category.id + '" checked /> ' + category.name + '</label>';
       }
-      this.$categories.append('<button class="btn find-venues">Find!</button>' + inputs);
+      this.$actions.show();
+      this.$categories.append(inputs);
+    },
+
+
+
+    /*
+     * Checkboxes
+     */
+
+    checkAllCategories: function (e) {
+      e.preventDefault();
+      this.$categories.find('input').each(function (k, input) {
+        $(input).attr('checked', true);
+      });
+    },
+
+    uncheckAllCategories: function (e) {
+      e.preventDefault();
+      this.$categories.find('input').each(function (k, input) {
+        $(input).attr('checked', false);
+      });
     },
 
 
