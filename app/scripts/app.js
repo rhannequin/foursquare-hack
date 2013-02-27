@@ -4,6 +4,7 @@ define(['backbone'], function (Backbone) {
   var MainView = Backbone.View.extend({
 
     el: 'body',
+    $categories = $('.categories'),
     foursquareApiUrl: 'https://api.foursquare.com/v2/',
     foursquareOauthToken: 'L3DMOWACH200L0QKG1GK5DVGS1EEFMO5K4ND5WCI3JQ1RZ3I',
     foursquareFoodCategoryId: '4d4b7105d754a06374d81259',
@@ -42,17 +43,25 @@ define(['backbone'], function (Backbone) {
       if (this.geolocIsAvailable()) {
         navigator.geolocation.getCurrentPosition(function (position) {
           self.renderMap(position);
-          self.showCategoryList(self.foursquareCategories);
+          self.renderCategoryList(self.foursquareCategories);
         });
       } else {
         console.warn('You don\'t have HTML Geolocation API available on this browser.');
       }
     },
 
+
+
+    /*
+     * LOCATION
+     */
+
+    // Check is geolocation is available on this browser
     geolocIsAvailable: function () {
       return typeof navigator.geolocation !== 'undefined';
     },
 
+    // Display Google Maps
     renderMap: function (position) {
       // User's location
       this.userLatitude = position.coords.latitude;
@@ -68,12 +77,20 @@ define(['backbone'], function (Backbone) {
       this.renderUserLocation(this.map);
     },
 
+    // Create marker to display user's location
     renderUserLocation: function (map) {
       var position = new google.maps.LatLng(this.userLatitude, this.userLongitude);
       var customMarker = this.customMarker();
       this.addMarker(map, position, 'You are here!', customMarker);
     },
 
+
+
+    /*
+     * VENUES
+     */
+
+    // Foursquare API Request maker
     foursquareRequest: function (url, params) {
       var params = params || {};
       params.oauth_token = this.foursquareOauthToken;
@@ -85,6 +102,7 @@ define(['backbone'], function (Backbone) {
       });
     },
 
+    // Handle venues request
     fireVenuesSearch: function (e) {
       var choices = []
           self = this;
@@ -105,6 +123,7 @@ define(['backbone'], function (Backbone) {
       });
     },
 
+    // Display venue markers to a map
     showNearVenues: function (map, items) {
       this.clearMap(map);
       this.renderUserLocation(map);
@@ -115,15 +134,23 @@ define(['backbone'], function (Backbone) {
       }
     },
 
-    showCategoryList: function (categories) {
+    // Render list of checkboxes to Categories div
+    renderCategoryList: function (categories) {
       var inputs = '';
       for(var i in categories) {
         var category = categories[i];
         inputs += '<div class="row-fluid"><label><input type="checkbox" name="' + category.id + '" checked /> ' + category.name + '</label></div>';
       }
-      $('.categories').append('<button class="btn find-venues">Find!</button>' + inputs);
+      this.$categories.append('<button class="btn find-venues">Find!</button>' + inputs);
     },
 
+
+
+    /*
+     * MARKERS
+     */
+
+    // Add one marker to a map
     addMarker: function (map, position, title, layout) {
       map.markers = map.markers || [];
       var params = {
@@ -140,19 +167,22 @@ define(['backbone'], function (Backbone) {
       return map;
     },
 
+    // Remove one marker from a map
     removeMarker: function (marker, map) {
       marker.setMap(null);
       return map;
     },
 
+    // Remove all the markers from a map
     clearMap: function (map) {
       for(var i in map.markers) {
         var marker = map.markers[i];
-        marker.setMap(null);
+        this.removeMarker(marker);
       }
       return map;
     },
 
+    // Create green marker to make difference with venue markers
     customMarker: function () {
       // User's location marker
       // Credit: http://stackoverflow.com/users/3800/jack-b-nimble
