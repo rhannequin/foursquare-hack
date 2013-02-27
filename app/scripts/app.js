@@ -65,18 +65,13 @@ define(['backbone'], function (Backbone) {
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       this.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-      this.renderUserLocation(center, this.map);
+      this.renderUserLocation(this.map);
     },
 
-    renderUserLocation: function (position, map) {
+    renderUserLocation: function (map) {
+      var position = new google.maps.LatLng(this.userLatitude, this.userLongitude);
       var customMarker = this.customMarker();
-      var marker = new google.maps.Marker({
-        position: position,
-        map: this.map,
-        title: 'You are here!',
-        icon: customMarker[0],
-        shadow: customMarker[1]
-      });
+      this.addMarker(map, position, 'You are here!', customMarker);
     },
 
     foursquareRequest: function (url, params) {
@@ -111,14 +106,12 @@ define(['backbone'], function (Backbone) {
     },
 
     showNearVenues: function (map, items) {
+      this.clearMap(map);
+      this.renderUserLocation(map);
       for(var k in items) {
         var item = items[k];
         var location = item.location;
-        var marker = new google.maps.Marker({
-          position: new google.maps.LatLng(location.lat, location.lng),
-          map: map,
-          title: item.name
-        });
+        this.addMarker(map, new google.maps.LatLng(location.lat, location.lng), 'You are here!');
       }
     },
 
@@ -129,6 +122,35 @@ define(['backbone'], function (Backbone) {
         inputs += '<div class="row-fluid"><label><input type="checkbox" name="' + category.id + '" checked /> ' + category.name + '</label></div>';
       }
       $('.categories').append('<button class="btn find-venues">Find!</button>' + inputs);
+    },
+
+    addMarker: function (map, position, title, layout) {
+      map.markers = map.markers || [];
+      var params = {
+        position: position,
+        title: title,
+      };
+      if(typeof layout !== 'undefined') {
+        params.icon = layout[0];
+        params.shadow = layout[1];
+      }
+      var marker = new google.maps.Marker(params);
+      map.markers.push(marker);
+      marker.setMap(map);
+      return map;
+    },
+
+    removeMarker: function (marker, map) {
+      marker.setMap(null);
+      return map;
+    },
+
+    clearMap: function (map) {
+      for(var i in map.markers) {
+        var marker = map.markers[i];
+        marker.setMap(null);
+      }
+      return map;
     },
 
     customMarker: function () {
