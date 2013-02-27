@@ -1,10 +1,10 @@
-define(['backbone'], function (Backbone) {
+define(['jquery', 'backbone'], function ($, Backbone) {
   'use strict';
 
   var MainView = Backbone.View.extend({
 
     el: 'body',
-    $categories = $('.categories'),
+    $categories: $('.categories'),
     foursquareApiUrl: 'https://api.foursquare.com/v2/',
     foursquareOauthToken: 'L3DMOWACH200L0QKG1GK5DVGS1EEFMO5K4ND5WCI3JQ1RZ3I',
     foursquareFoodCategoryId: '4d4b7105d754a06374d81259',
@@ -130,7 +130,7 @@ define(['backbone'], function (Backbone) {
       for(var k in items) {
         var item = items[k];
         var location = item.location;
-        this.addMarker(map, new google.maps.LatLng(location.lat, location.lng), 'You are here!');
+        this.addMarker(map, new google.maps.LatLng(location.lat, location.lng), item.name);
       }
     },
 
