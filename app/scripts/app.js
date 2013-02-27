@@ -108,14 +108,16 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     fireVenuesSearch: function (e) {
       var choices = []
           self = this;
-      if(this.$categories.find('input:checked').length) {
-        $( $(e.currentTarget).parent().find('input:checked') ).each(function (k, v) {
+      var inputs = this.$categories.find('input:checked');
+      if(inputs.length > 0) {
+        inputs.each(function (k, v) {
           choices.push($(v).attr('name'));
         });
         choices = choices.join(',');
 
         var venuesRequest = this.foursquareRequest('venues/search', {
           ll: this.userLatitude + ',' + this.userLongitude,
+          intent: 'browse',
           limit: 50,
           radius: 5000, // 5000 meters around user's location
           categoryId: choices
