@@ -128,7 +128,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     // Create markers to close friends' location
     renderFriendsLocation: function (map) {
       var self = this;
-      var customMarker = {icon: 'img/logo-marker.png'};
+      var customMarker = {icon: 'images/logo-marker.png'};
       var friends = this.friends;
       for(var i in friends) {
         var friend = friends[i];
@@ -251,7 +251,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     // Add one infowindow to a marker from a map
     addInfoWindow: function (map, marker, label) {
-      var contentString = label.hasOwnProperty('id') ? '<h2><img width="70" src="img/users/' + label.id + '.jpg" alt="" />' + label.label + '</h2>' : '<h2>' + label.label + '</h2>',
+      var contentString = label.hasOwnProperty('id') ? '<h2><img width="70" src="images/' + label.id + '.jpg" alt="" />' + label.label + '</h2>' : '<h2>' + label.label + '</h2>',
           infowindow = new google.maps.InfoWindow({ content: contentString });
       map.infowindows = map.infowindows || [];
       map.infowindows.push(infowindow);
