@@ -8,30 +8,47 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     $actions: $('.actions'),
     foursquareApiUrl: 'https://api.foursquare.com/v2/',
     foursquareOauthToken: 'CKTMK32OZVMXUXXHSHBUJXGLIV2AYFUN00SG5ICMET3B5TQN',
-    foursquareCategories: $('#require-js').data('params').foursquareCategories,
-    /*foursquareCategories: [
-      {name: "Boulangerie",                      id: "4bf58dd8d48988d16a941735"},
-      {name: "Brasserie",                        id: "50327c8591d4c4b30a586d5d"},
-      {name: "Lieu servant des hamburgers",      id: "4bf58dd8d48988d16c941735"},
-      {name: "Restaurant chinois",               id: "4bf58dd8d48988d145941735"},
-      {name: "Café-restaurant",                  id: "4bf58dd8d48988d147941735"},
-      {name: "Fast-food",                        id: "4bf58dd8d48988d16e941735"},
-      {name: "Restaurant français",              id: "4bf58dd8d48988d10c941735"},
-      {name: "Restaurant grec",                  id: "4bf58dd8d48988d10e941735"},
-      {name: "Restaurant indien",                id: "4bf58dd8d48988d10f941735"},
-      {name: "Restaurant japonais",              id: "4bf58dd8d48988d111941735"},
-      {name: "Restaurant coréen",                id: "4bf58dd8d48988d113941735"},
-      {name: "Pizzeria",                         id: "4bf58dd8d48988d1ca941735"},
-      {name: "Sandwicherie",                     id: "4bf58dd8d48988d1c5941735"},
-      {name: "Restaurant de fruits de mer",      id: "4bf58dd8d48988d1ce941735"},
-      {name: "Snack",                            id: "4bf58dd8d48988d1c7941735"},
-      {name: "Restaurant-grill",                 id: "4bf58dd8d48988d1cc941735"},
-      {name: "Bar à sushis",                     id: "4bf58dd8d48988d1d2941735"},
-      {name: "Bar à tapas",                      id: "4bf58dd8d48988d1db931735"},
-      {name: "Restaurant thaïlandais",           id: "4bf58dd8d48988d149941735"},
-      {name: "Restaurant turc",                  id: "4f04af1f2fb6e1c99f3db0bb"},
-      {name: "Restaurant végétarien/végétalien", id: "4bf58dd8d48988d1d3941735"}
-    ],*/
+    params: $('#require-js').data('params'),
+    // foursquareCategories: [
+    //   {name: "Boulangerie",                      id: "4bf58dd8d48988d16a941735"},
+    //   {name: "Brasserie",                        id: "50327c8591d4c4b30a586d5d"},
+    //   {name: "Lieu servant des hamburgers",      id: "4bf58dd8d48988d16c941735"},
+    //   {name: "Restaurant chinois",               id: "4bf58dd8d48988d145941735"},
+    //   {name: "Café-restaurant",                  id: "4bf58dd8d48988d147941735"},
+    //   {name: "Fast-food",                        id: "4bf58dd8d48988d16e941735"},
+    //   {name: "Restaurant français",              id: "4bf58dd8d48988d10c941735"},
+    //   {name: "Restaurant grec",                  id: "4bf58dd8d48988d10e941735"},
+    //   {name: "Restaurant indien",                id: "4bf58dd8d48988d10f941735"},
+    //   {name: "Restaurant japonais",              id: "4bf58dd8d48988d111941735"},
+    //   {name: "Restaurant coréen",                id: "4bf58dd8d48988d113941735"},
+    //   {name: "Pizzeria",                         id: "4bf58dd8d48988d1ca941735"},
+    //   {name: "Sandwicherie",                     id: "4bf58dd8d48988d1c5941735"},
+    //   {name: "Restaurant de fruits de mer",      id: "4bf58dd8d48988d1ce941735"},
+    //   {name: "Snack",                            id: "4bf58dd8d48988d1c7941735"},
+    //   {name: "Restaurant-grill",                 id: "4bf58dd8d48988d1cc941735"},
+    //   {name: "Bar à sushis",                     id: "4bf58dd8d48988d1d2941735"},
+    //   {name: "Bar à tapas",                      id: "4bf58dd8d48988d1db931735"},
+    //   {name: "Restaurant thaïlandais",           id: "4bf58dd8d48988d149941735"},
+    //   {name: "Restaurant turc",                  id: "4f04af1f2fb6e1c99f3db0bb"},
+    //   {name: "Restaurant végétarien/végétalien", id: "4bf58dd8d48988d1d3941735"}
+    // ],
+    friends: [
+      {
+        id: 45,
+        firstname: 'Homer',
+        lastname: 'Simpson'
+      },
+      {
+        id: 35,
+        firstname: 'Walter',
+        lastname: 'White'
+      },
+      {
+        id: 35,
+        firstname: 'Jessica',
+        lastname: 'Alba'
+      }
+    ],
     map: null,
 
     events: {
@@ -42,6 +59,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     initialize: function () {
       var self = this;
+      this.foursquareCategories = this.params.foursquareCategories;
       if (this.geolocIsAvailable()) {
         navigator.geolocation.getCurrentPosition(function (position) {
           self.renderMap(position);
@@ -69,6 +87,16 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       this.userLatitude = position.coords.latitude;
       this.userLongitude = position.coords.longitude;
 
+      // Custom friends location
+      var floatUserLatitude = parseFloat(this.userLatitude, 10);
+      var floatUserLongitude = parseFloat(this.userLongitude, 10);
+      this.friends[0].lastLatitude  = floatUserLatitude + 0.009;
+      this.friends[0].lastLongitude = floatUserLongitude;
+      this.friends[1].lastLatitude  = floatUserLatitude;
+      this.friends[1].lastLongitude = floatUserLongitude - 0.009;
+      this.friends[2].lastLatitude  = floatUserLatitude - 0.011;
+      this.friends[2].lastLongitude = floatUserLongitude + 0.010;
+
       var center = new google.maps.LatLng(this.userLatitude, this.userLongitude);
       var mapOptions = {
         center: center,
@@ -83,7 +111,26 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     renderUserLocation: function (map) {
       var position = new google.maps.LatLng(this.userLatitude, this.userLongitude);
       var customMarker = this.customMarker();
-      this.addMarker(map, position, 'You are here!', customMarker);
+      var marker = this.addMarker(map, 'users', position, 'You are here!', customMarker);
+      var infowindow = this.addInfoWindow (map, marker, 'You are here!');
+      this.renderFriendsLocation(map, customMarker);
+    },
+
+    // Create markers to close friends' location
+    renderFriendsLocation: function (map, customMarker) {
+      var self = this;
+      customMarker = customMarker || this.customMarker();
+      var friends = this.friends;
+      for(var i in friends) {
+        var friend = friends[i];
+        var name = friend.firstname + ' ' + friend.lastname;
+        var position = new google.maps.LatLng(friend.lastLatitude, friend.lastLongitude);
+        var marker = this.addMarker(map, 'users', position, name, customMarker);
+
+        (function(marker, name) {
+          var infowindow = self.addInfoWindow(map, marker, name);
+        }(marker, name));
+      }
     },
 
 
@@ -132,12 +179,11 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     // Display venue markers to a map
     showNearVenues: function (map, items) {
-      this.clearMap(map);
-      this.renderUserLocation(map);
+      this.clearMap(map, 'venues');
       for(var k in items) {
         var item = items[k];
         var location = item.location;
-        this.addMarker(map, new google.maps.LatLng(location.lat, location.lng), item.name);
+        this.addMarker(map, 'venues', new google.maps.LatLng(location.lat, location.lng), item.name);
       }
     },
 
@@ -179,8 +225,9 @@ define(['jquery', 'backbone'], function ($, Backbone) {
      */
 
     // Add one marker to a map
-    addMarker: function (map, position, title, layout) {
-      map.markers = map.markers || [];
+    addMarker: function (map, type, position, title, layout) {
+      map.markers = map.markers || {};
+      map.markers[type] = map.markers[type] || [];
       var params = {
         position: position,
         title: title,
@@ -190,9 +237,25 @@ define(['jquery', 'backbone'], function ($, Backbone) {
         params.shadow = layout[1];
       }
       var marker = new google.maps.Marker(params);
-      map.markers.push(marker);
+      map.markers[type].push(marker);
       marker.setMap(map);
-      return map;
+      return marker;
+    },
+
+    // Add one infowindow to a marker from a map
+    addInfoWindow: function (map, marker, name) {
+      var contentString = '<h2>' + name + '</h2>',
+          infowindow = new google.maps.InfoWindow({ content: contentString });
+      map.infowindows = map.infowindows || [];
+      map.infowindows.push(infowindow);
+      google.maps.event.addListener(marker, 'click', function() {
+        for(var j in map.infowindows) {
+          var mapinfowindow = map.infowindows[j];
+          mapinfowindow.close();
+        }
+        infowindow.open(map, marker);
+      });
+      return infowindow;
     },
 
     // Remove one marker from a map
@@ -202,9 +265,9 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     },
 
     // Remove all the markers from a map
-    clearMap: function (map) {
-      for(var i in map.markers) {
-        var marker = map.markers[i];
+    clearMap: function (map, type) {
+      for(var i in map.markers[type]) {
+        var marker = map.markers[type][i];
         this.removeMarker(marker);
       }
       return map;
