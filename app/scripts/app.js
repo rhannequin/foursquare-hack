@@ -215,14 +215,14 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     checkAllCategories: function (e) {
       e.preventDefault();
       this.$categories.find('input').each(function (k, input) {
-        $(input).attr('checked', true);
+        $(input).prop('checked', true)
       });
     },
 
     uncheckAllCategories: function (e) {
       e.preventDefault();
       this.$categories.find('input').each(function (k, input) {
-        $(input).attr('checked', false);
+        $(input).prop('checked', false);
       });
     },
 
