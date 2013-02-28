@@ -36,17 +36,26 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       {
         id: 45,
         firstname: 'Homer',
-        lastname: 'Simpson'
+        lastname: 'Simpson',
+        getName: function () {
+          return this.firstname + ' ' + this.lastname;
+        }
       },
       {
         id: 35,
         firstname: 'Walter',
-        lastname: 'White'
+        lastname: 'White',
+        getName: function () {
+          return this.firstname + ' ' + this.lastname;
+        }
       },
       {
-        id: 35,
+        id: 60,
         firstname: 'Jessica',
-        lastname: 'Alba'
+        lastname: 'Alba',
+        getName: function () {
+          return this.firstname + ' ' + this.lastname;
+        }
       }
     ],
     map: null,
@@ -112,24 +121,23 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       var position = new google.maps.LatLng(this.userLatitude, this.userLongitude);
       var customMarker = this.customMarker();
       var marker = this.addMarker(map, 'users', position, 'You are here!', customMarker);
-      var infowindow = this.addInfoWindow (map, marker, 'You are here!');
-      this.renderFriendsLocation(map, customMarker);
+      var infowindow = this.addInfoWindow (map, marker, {label: 'You are here!'});
+      this.renderFriendsLocation(map);
     },
 
     // Create markers to close friends' location
-    renderFriendsLocation: function (map, customMarker) {
+    renderFriendsLocation: function (map) {
       var self = this;
-      customMarker = customMarker || this.customMarker();
+      var customMarker = {icon: 'img/logo-marker.png'};
       var friends = this.friends;
       for(var i in friends) {
         var friend = friends[i];
-        var name = friend.firstname + ' ' + friend.lastname;
         var position = new google.maps.LatLng(friend.lastLatitude, friend.lastLongitude);
-        var marker = this.addMarker(map, 'users', position, name, customMarker);
+        var marker = this.addMarker(map, 'users', position, friend.getName(), customMarker);
 
-        (function(marker, name) {
-          var infowindow = self.addInfoWindow(map, marker, name);
-        }(marker, name));
+        (function(marker, friend) {
+          var infowindow = self.addInfoWindow(map, marker, {id: friend.id, label: friend.getName()});
+        }(marker, friend));
       }
     },
 
@@ -233,8 +241,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
         title: title,
       };
       if(typeof layout !== 'undefined') {
-        params.icon = layout[0];
-        params.shadow = layout[1];
+        params = _.extend(params, layout);
       }
       var marker = new google.maps.Marker(params);
       map.markers[type].push(marker);
@@ -243,8 +250,8 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     },
 
     // Add one infowindow to a marker from a map
-    addInfoWindow: function (map, marker, name) {
-      var contentString = '<h2>' + name + '</h2>',
+    addInfoWindow: function (map, marker, label) {
+      var contentString = label.hasOwnProperty('id') ? '<h2><img width="70" src="img/users/' + label.id + '.jpg" alt="" />' + label.label + '</h2>' : '<h2>' + label.label + '</h2>',
           infowindow = new google.maps.InfoWindow({ content: contentString });
       map.infowindows = map.infowindows || [];
       map.infowindows.push(infowindow);
