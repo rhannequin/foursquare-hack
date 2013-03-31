@@ -1,0 +1,12 @@
+{
+  "baseUrl": "",
+  "app": {
+    "path": "app",
+    "assets": {
+      "path": "app/assets",
+      "scripts": "app/assets/scripts",
+      "styles": "app/assets/styles",
+      "images": "app/assets/images"
+    }
+  }
+}

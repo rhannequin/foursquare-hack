@@ -1,0 +1,12 @@
+{
+  "name": "foursquare-hack",
+  "version": "0.0.0",
+  "dependencies": {},
+  "engines": {
+    "node": ">=0.10.1"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "matchdep": "~0.1.1"
+  }
+}
