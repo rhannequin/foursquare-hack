@@ -47,16 +47,6 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       this.userLatitude = position.coords.latitude;
       this.userLongitude = position.coords.longitude;
 
-      // Custom friends location
-      var floatUserLatitude = parseFloat(this.userLatitude, 10);
-      var floatUserLongitude = parseFloat(this.userLongitude, 10);
-      this.friends[0].lastLatitude  = floatUserLatitude + 0.009;
-      this.friends[0].lastLongitude = floatUserLongitude;
-      this.friends[1].lastLatitude  = floatUserLatitude;
-      this.friends[1].lastLongitude = floatUserLongitude - 0.009;
-      this.friends[2].lastLatitude  = floatUserLatitude - 0.011;
-      this.friends[2].lastLongitude = floatUserLongitude + 0.010;
-
       var center = new google.maps.LatLng(this.userLatitude, this.userLongitude);
       var mapOptions = {
         center: center,

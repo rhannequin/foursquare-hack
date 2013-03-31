@@ -1,0 +1,12 @@
+.hero-unit {
+  margin: 50px auto 0 auto;
+  width: 300px;
+}
+
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0 }
+#map_canvas { height: 400px; width: 100%; }
+#filters h1 { width: 230px; float: left; }
+#filters .actions { display: none; float: left; margin-top: 15px; }
+#filters .clear { clear: both; }
+#filters label { display: inline-block; padding: 0 10px; }
