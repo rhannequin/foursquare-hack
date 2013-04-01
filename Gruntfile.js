@@ -11,6 +11,48 @@ module.exports = function (grunt) {
 
     foursquareHack: foursquareHack,
 
+    // Clean folders
+    clean: {
+      build: {
+        src: ['<%= foursquareHack.dist.path %>']
+      }
+    },
+
+    // Copy files and folders
+    copy: {
+      styles: {
+        files: [
+          {
+            expand: true,
+            cwd: '<%= foursquareHack.app.assets.styles %>',
+            src: ['*.css'],
+            dest: '<%= foursquareHack.dist.assets.styles %>'
+          }
+        ]
+      },
+      html: {
+        files: [
+          {
+            expand: true,
+            cwd: '<%= foursquareHack.app.path %>',
+            src: ['*.html'],
+            dest: '<%= foursquareHack.dist.path %>',
+            filter: 'isFile'
+          }
+        ]
+      },
+      images: {
+        files: [
+          {
+            expand: true,
+            cwd: '<%= foursquareHack.app.assets.images %>',
+            src: ['**'],
+            dest: '<%= foursquareHack.dist.assets.images %>'
+          }
+        ]
+      }
+    },
+
     // Compass
     compass: {
       dev: {
@@ -22,6 +64,17 @@ module.exports = function (grunt) {
           outputStyle: 'expanded',
           noLineComments: false,
           debugInfo: true
+        }
+      },
+      build: {
+        options: {
+          sassDir: '<%= foursquareHack.app.assets.styles %>',
+          cssDir: '<%= foursquareHack.app.assets.styles %>',
+          imagesDir: '<%= foursquareHack.app.assets.images %>',
+          javascriptsDir: '<%= foursquareHack.app.assets.scripts %>',
+          outputStyle: 'compressed',
+          noLineComments: true,
+          debugInfo: false
         }
       }
     },
@@ -62,11 +115,11 @@ module.exports = function (grunt) {
     },
 
     requirejs: {
-      dist: {
+      build: {
         options: {
           baseUrl:                    '<%= foursquareHack.app.assets.path %>',
           mainConfigFile:             '<%= foursquareHack.app.assets.scripts %>config.js',
-          out:                        '<%= foursquareHack.dist.assets.scripts %>opt.js',
+          out:                        '<%= foursquareHack.dist.assets.scripts %>app.js',
           name:                       'components/almond/almond',
           insertRequire:              ['scripts/main'],
           wrap:                       true,
@@ -84,7 +137,10 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['compass:dev', 'livereload-start', 'server', 'regarde']);
 
   // Build
-  grunt.registerTask('build', ['requirejs']);
+  grunt.registerTask('build', ['clean:build', 'compass:build', 'copyBuild', 'requirejs:build']);
+
+  // copyBuild
+  grunt.registerTask('copyBuild', ['copy:html', 'copy:styles', 'copy:images']);
 
   // Server
   grunt.registerTask('server', 'connect:server');
