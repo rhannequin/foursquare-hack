@@ -11,6 +11,21 @@ module.exports = function (grunt) {
 
     foursquareHack: foursquareHack,
 
+    // Compass
+    compass: {
+      dev: {
+        options: {
+          sassDir: '<%= foursquareHack.app.assets.styles %>',
+          cssDir: '<%= foursquareHack.app.assets.styles %>',
+          imagesDir: '<%= foursquareHack.app.assets.images %>',
+          javascriptsDir: '<%= foursquareHack.app.assets.scripts %>',
+          outputStyle: 'expanded',
+          noLineComments: false,
+          debugInfo: true
+        }
+      }
+    },
+
     // server
     connect: {
       server: {
@@ -36,17 +51,13 @@ module.exports = function (grunt) {
         files: ['<%= foursquareHack.app.assets.scripts %>**/*'],
         tasks: []
       },
-      css: {
-        files: ['<%= foursquareHack.app.assets.styles %>**/*'],
-        tasks: []
+      scss: {
+        files: ['<%= foursquareHack.app.assets.styles %>**/*.scss'],
+        tasks: ['compass:dev']
       },
       images: {
         files: ['<%= foursquareHack.app.assets.images %>**/*'],
         tasks: []
-      },
-      livereload: {
-        files: ['<%= foursquareHack.app.path %>**/*'],
-        tasks: ['livereload']
       }
     },
 
@@ -70,7 +81,7 @@ module.exports = function (grunt) {
   });
 
   // Default
-  grunt.registerTask('default', ['livereload-start', 'server', 'regarde']);
+  grunt.registerTask('default', ['compass:dev', 'livereload-start', 'server', 'regarde']);
 
   // Build
   grunt.registerTask('build', ['requirejs']);
