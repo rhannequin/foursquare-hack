@@ -1,4 +1,5 @@
 require.config({
+  deps: ['app'], // First script called
   paths: {
     jquery: 'jquery',
     backbone: 'backbone',
@@ -17,10 +18,4 @@ require.config({
       exports: 'Backbone'
     }
   }
-});
-
-require(['app', 'jquery'], function (MainView, $) {
-  'use strict';
-
-  var mainView = new MainView();
 });

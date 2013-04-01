@@ -48,12 +48,32 @@ module.exports = function (grunt) {
         files: ['<%= foursquareHack.app.path %>/**/*'],
         tasks: ['livereload']
       }
+    },
+
+    requirejs: {
+      dist: {
+        options: {
+          baseUrl: '<%= foursquareHack.app.assets.scripts %>',
+          mainConfigFile: '<%= foursquareHack.app.assets.scripts %>/main.js',
+          out: '<%= foursquareHack.dist.assets.scripts %>/opt.js',
+          name: 'almond',
+          insertRequire: ['app'],
+          wrap: true,
+          findNestedDependencies: true,
+          optimizeAllPluginResources: false,
+          preserveLicenseComments: true,
+          optimize: 'none'
+        }
+      }
     }
 
   });
 
   // Default
   grunt.registerTask('default', ['livereload-start', 'server', 'regarde']);
+
+  // Build
+  grunt.registerTask('build', ['requirejs']);
 
   // Server
   grunt.registerTask('server', 'connect:server');

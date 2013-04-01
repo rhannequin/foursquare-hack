@@ -8,5 +8,14 @@
       "styles": "app/assets/styles",
       "images": "app/assets/images"
     }
+  },
+  "dist": {
+    "path": "dist",
+    "assets": {
+      "path": "dist/assets",
+      "scripts": "dist/assets/scripts",
+      "styles": "dist/assets/styles",
+      "images": "dist/assets/images"
+    }
   }
 }

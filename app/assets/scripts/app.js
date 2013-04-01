@@ -226,5 +226,5 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
   });
 
-  return MainView;
+  return new MainView();
 });
