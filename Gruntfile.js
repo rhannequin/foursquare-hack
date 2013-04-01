@@ -50,6 +50,17 @@ module.exports = function (grunt) {
             dest: '<%= foursquareHack.dist.assets.images %>'
           }
         ]
+      },
+      other: {
+        files: [
+          {
+            expand: true,
+            dot: true,
+            cwd: '<%= foursquareHack.app.path %>',
+            dest: '<%= foursquareHack.dist.path %>',
+            src: ['*.{ico,txt}', '.htaccess']
+          }
+        ]
       }
     },
 
@@ -137,10 +148,20 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['compass:dev', 'livereload-start', 'server', 'regarde']);
 
   // Build
-  grunt.registerTask('build', ['clean:build', 'compass:build', 'copyBuild', 'requirejs:build']);
+  grunt.registerTask('build', [
+    'clean:build',
+    'compass:build',
+    'copyBuild',
+    'requirejs:build'
+  ]);
 
   // copyBuild
-  grunt.registerTask('copyBuild', ['copy:html', 'copy:styles', 'copy:images']);
+  grunt.registerTask('copyBuild', [
+    'copy:html',
+    'copy:styles',
+    'copy:images',
+    'copy:other'
+  ]);
 
   // Server
   grunt.registerTask('server', 'connect:server');
