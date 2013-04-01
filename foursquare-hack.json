@@ -1,21 +1,22 @@
 {
   "baseUrl": "",
   "app": {
-    "path": "app",
+    "path": "app/",
     "assets": {
-      "path": "app/assets",
-      "scripts": "app/assets/scripts",
-      "styles": "app/assets/styles",
-      "images": "app/assets/images"
+      "path": "app/assets/",
+      "components": "app/assets/components/",
+      "scripts": "app/assets/scripts/",
+      "styles": "app/assets/styles/",
+      "images": "app/assets/images/"
     }
   },
   "dist": {
-    "path": "dist",
+    "path": "dist/",
     "assets": {
-      "path": "dist/assets",
-      "scripts": "dist/assets/scripts",
-      "styles": "dist/assets/styles",
-      "images": "dist/assets/images"
+      "path": "dist/assets/",
+      "scripts": "dist/assets/scripts/",
+      "styles": "dist/assets/styles/",
+      "images": "dist/assets/images/"
     }
   }
 }
