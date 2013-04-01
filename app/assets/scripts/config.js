@@ -1,10 +1,10 @@
 require.config({
-  baseUrl: 'assets/',
-  deps: ['scripts/main'],
+  baseUrl: 'assets/scripts/',
+  deps: ['main'],
   paths: {
-    jquery: 'components/jquery/jquery.min',
-    backbone: 'components/backbone/backbone-min',
-    lodash: 'components/lodash/lodash'
+    jquery: '../components/jquery/jquery.min',
+    backbone: '../components/backbone/backbone-min',
+    lodash: '../components/lodash/lodash'
   },
   shim: {
     lodash: {
@@ -16,3 +16,8 @@ require.config({
     }
   }
 });
+
+// require(['main'], function (MainView) {
+//   alert('lol');
+//   var mainView = MainView;
+// });
