@@ -4,4 +4,5 @@ temp
 .tmp
 dist
 .sass-cache
-app/components
+app/assets/components
+app/assets/styles/*.css

@@ -1,0 +1,28 @@
+@import '../components/sass-bootstrap/lib/bootstrap.scss';
+
+html {
+  height: 100%
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0
+}
+
+.hero-unit {
+  margin: 50px auto 0 auto;
+  width: 300px;
+}
+
+#map_canvas {
+  height: 400px;
+  width: 100%;
+}
+
+#filters {
+  h1 { width: 230px; float: left; }
+  .actions { display: none; float: left; margin-top: 15px; }
+  .clear { clear: both; }
+  label { display: inline-block; padding: 0 10px; }
+}

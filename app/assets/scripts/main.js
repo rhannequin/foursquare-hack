@@ -8,7 +8,9 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     $actions: $('.actions'),
     foursquareApiUrl: 'https://api.foursquare.com/v2/',
     foursquareOauthToken: 'CKTMK32OZVMXUXXHSHBUJXGLIV2AYFUN00SG5ICMET3B5TQN',
-    params: $('#require-js').data('params'),
+    params: {
+      foursquareCategories: JSON.parse('[{"name":"Boulangerie","id":"4bf58dd8d48988d16a941735"},{"name":"Brasserie","id":"50327c8591d4c4b30a586d5d"},{"name":"Lieu servant des hamburgers","id":"4bf58dd8d48988d16c941735"},{"name":"Restaurant chinois","id":"4bf58dd8d48988d145941735"},{"name":"Café-restaurant","id":"4bf58dd8d48988d147941735"},{"name":"Fast-food","id":"4bf58dd8d48988d16e941735"},{"name":"Restaurant français","id":"4bf58dd8d48988d10c941735"},{"name":"Restaurant grec","id":"4bf58dd8d48988d10e941735"},{"name":"Restaurant indien","id":"4bf58dd8d48988d10f941735"},{"name":"Restaurant japonais","id":"4bf58dd8d48988d111941735"},{"name":"Restaurant coréen","id":"4bf58dd8d48988d113941735"},{"name":"Pizzeria","id":"4bf58dd8d48988d1ca941735"},{"name":"Sandwicherie","id":"4bf58dd8d48988d1c5941735"},{"name":"Restaurant de fruits de mer","id":"4bf58dd8d48988d1ce941735"},{"name":"Snack","id":"4bf58dd8d48988d1c7941735"},{"name":"Restaurant-grill","id":"4bf58dd8d48988d1cc941735"},{"name":"Bar à sushis","id":"4bf58dd8d48988d1d2941735"},{"name":"Bar à tapas","id":"4bf58dd8d48988d1db931735"},{"name":"Restaurant thaïlandais","id":"4bf58dd8d48988d149941735"},{"name":"Restaurant turc","id":"4f04af1f2fb6e1c99f3db0bb"},{"name":"Restaurant végétarien/végétalien","id":"4bf58dd8d48988d1d3941735"}]')
+    },
     map: null,
 
     events: {
@@ -47,16 +49,6 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       this.userLatitude = position.coords.latitude;
       this.userLongitude = position.coords.longitude;
 
-      // Custom friends location
-      var floatUserLatitude = parseFloat(this.userLatitude, 10);
-      var floatUserLongitude = parseFloat(this.userLongitude, 10);
-      this.friends[0].lastLatitude  = floatUserLatitude + 0.009;
-      this.friends[0].lastLongitude = floatUserLongitude;
-      this.friends[1].lastLatitude  = floatUserLatitude;
-      this.friends[1].lastLongitude = floatUserLongitude - 0.009;
-      this.friends[2].lastLatitude  = floatUserLatitude - 0.011;
-      this.friends[2].lastLongitude = floatUserLongitude + 0.010;
-
       var center = new google.maps.LatLng(this.userLatitude, this.userLongitude);
       var mapOptions = {
         center: center,
@@ -83,7 +75,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     // Foursquare API Request maker
     foursquareRequest: function (url, params) {
-      var params = params || {};
+      if(!params) params = {};
       params.oauth_token = this.foursquareOauthToken;
       return $.ajax({
         url: this.foursquareApiUrl + url,
@@ -95,7 +87,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     // Handle venues request
     fireVenuesSearch: function (e) {
-      var choices = []
+      var choices = [],
           self = this;
       var inputs = this.$categories.find('input:checked');
       if(inputs.length > 0) {
@@ -150,7 +142,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     checkAllCategories: function (e) {
       e.preventDefault();
       this.$categories.find('input').each(function (k, input) {
-        $(input).prop('checked', true)
+        $(input).prop('checked', true);
       });
     },
 
@@ -173,7 +165,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       map.markers[type] = map.markers[type] || [];
       var params = {
         position: position,
-        title: title,
+        title: title
       };
       if(typeof layout !== 'undefined') {
         params = _.extend(params, layout);
@@ -236,5 +228,5 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
   });
 
-  return MainView;
+  return new MainView();
 });

@@ -1,0 +1,29 @@
+{
+  "baseUrl": "",
+  "app": {
+    "path": "app",
+    "assets": "app/assets",
+    "components": "app/assets/components",
+    "scripts": "app/assets/scripts",
+    "styles": "app/assets/styles",
+    "images": "app/assets/images"
+  },
+  "dist": {
+    "path": "dist",
+    "assets": "dist/assets",
+    "scripts": "dist/assets/scripts",
+    "styles": "dist/assets/styles",
+    "images": "dist/assets/images"
+  },
+  "grunt": {
+    "jshint": {
+      "files": {
+        "src": [
+          "Gruntfile.js",
+          "package.json",
+          "<%= foursquareHack.app.scripts %>/**/*.js"
+        ]
+      }
+    }
+  }
+}
