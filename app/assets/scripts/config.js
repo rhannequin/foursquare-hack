@@ -16,8 +16,3 @@ require.config({
     }
   }
 });
-
-// require(['main'], function (MainView) {
-//   alert('lol');
-//   var mainView = MainView;
-// });

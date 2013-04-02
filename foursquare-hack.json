@@ -14,5 +14,16 @@
     "scripts": "dist/assets/scripts",
     "styles": "dist/assets/styles",
     "images": "dist/assets/images"
+  },
+  "grunt": {
+    "jshint": {
+      "files": {
+        "src": [
+          "Gruntfile.js",
+          "package.json",
+          "<%= foursquareHack.app.scripts %>/**/*.js"
+        ]
+      }
+    }
   }
 }

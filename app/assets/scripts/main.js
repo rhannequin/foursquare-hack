@@ -75,7 +75,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     // Foursquare API Request maker
     foursquareRequest: function (url, params) {
-      var params = params || {};
+      if(!params) params = {};
       params.oauth_token = this.foursquareOauthToken;
       return $.ajax({
         url: this.foursquareApiUrl + url,
@@ -87,7 +87,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
 
     // Handle venues request
     fireVenuesSearch: function (e) {
-      var choices = []
+      var choices = [],
           self = this;
       var inputs = this.$categories.find('input:checked');
       if(inputs.length > 0) {
@@ -142,7 +142,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
     checkAllCategories: function (e) {
       e.preventDefault();
       this.$categories.find('input').each(function (k, input) {
-        $(input).prop('checked', true)
+        $(input).prop('checked', true);
       });
     },
 
@@ -165,7 +165,7 @@ define(['jquery', 'backbone'], function ($, Backbone) {
       map.markers[type] = map.markers[type] || [];
       var params = {
         position: position,
-        title: title,
+        title: title
       };
       if(typeof layout !== 'undefined') {
         params = _.extend(params, layout);
