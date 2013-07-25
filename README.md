@@ -2,7 +2,7 @@
 
 This is a small project in order to play with the [Foursquare API](https://developer.foursquare.com/overview/).
 
-You can see the latest production version at [remyhannequin.github.com/foursquare-hack](http://remyhannequin.github.com/foursquare-hack).
+You can see the latest production version at [rhannequin.github.io/foursquare-hack](http://rhannequin.github.io/foursquare-hack).
 
 ## Requirements
 
